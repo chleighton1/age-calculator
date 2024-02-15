@@ -1,6 +1,8 @@
 "use client";
 
 import { React, useState } from "react";
+import { useForm } from "react-hook-form";
+import { DevTool } from "@hookform/devtools";
 import Arrow from "./components/Arrow";
 const { DateTime } = require("luxon");
 
@@ -10,30 +12,17 @@ export default function Home() {
     months: "",
     days: "",
   });
-  const [formData, setFormData] = useState({
-    day: "",
-    month: "",
-    year: "",
-  });
 
-  function handleChange(event) {
-    const { name, value } = event.target;
-    setFormData((prevFormData) => {
-      return {
-        ...prevFormData,
-        [name]: Number(value),
-      };
-    });
-  }
+  const form = useForm();
+  const { register, control, handleSubmit } = form;
 
-  function handleSubmit(event) {
-    event.preventDefault();
-
+  function onSubmit(data) {
+    console.log("Form submitted", data);
     const now = DateTime.now();
     const userBirth = DateTime.local(
-      formData.year,
-      formData.month,
-      formData.day
+      Number(data.year),
+      Number(data.month),
+      Number(data.day)
     );
 
     const diff = now.diff(userBirth, ["months", "days", "years"]).toObject();
@@ -42,13 +31,18 @@ export default function Home() {
       months: Math.floor(diff.months),
       days: Math.floor(diff.days),
     }));
+    console.log(age);
   }
 
   return (
     <main className="bg-white rounded-3xl rounded-br-[114px] mt-16 mx-5 p-6">
       {/* AGE INPUT */}
       <div>
-        <form className="form mb-20 mt-5" onSubmit={handleSubmit}>
+        <form
+          className="form mb-20 mt-5"
+          onSubmit={handleSubmit(onSubmit)}
+          noValidate
+        >
           <div className="flex w-full mb-14 gap-8">
             <div>
               <label
@@ -60,10 +54,10 @@ export default function Home() {
               <input
                 className="border font-bold rounded border-line w-full px-6 py-2"
                 type="number"
-                placeholder="DD"
-                onChange={handleChange}
-                name="day"
-                value={formData.day}
+                id="day"
+                {...register("day", {
+                  required: "Day is required",
+                })}
               />
             </div>
             <div>
@@ -76,10 +70,10 @@ export default function Home() {
               <input
                 className="border font-bold rounded border-line w-full px-6 py-2"
                 type="number"
-                placeholder="MM"
-                onChange={handleChange}
-                name="month"
-                value={formData.month}
+                id="month"
+                {...register("month", {
+                  required: "Month is required",
+                })}
               />
             </div>
             <div>
@@ -92,10 +86,10 @@ export default function Home() {
               <input
                 className="border font-bold rounded border-line w-full px-6 py-2"
                 type="number"
-                placeholder="YYYY"
-                onChange={handleChange}
-                name="year"
-                value={formData.year}
+                id="year"
+                {...register("year", {
+                  required: "Year is required",
+                })}
               />
             </div>
           </div>
@@ -106,6 +100,7 @@ export default function Home() {
             </button>
           </div>
         </form>
+        <DevTool control={control} />
       </div>
 
       {/* AGE OUTPUT */}
