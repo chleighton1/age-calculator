@@ -13,8 +13,11 @@ export default function Home() {
     days: "",
   });
 
-  const form = useForm();
-  const { register, control, handleSubmit } = form;
+  const form = useForm({
+    shouldFocusError: false,
+  });
+  const { register, control, handleSubmit, formState } = form;
+  const { errors } = formState;
 
   function onSubmit(data) {
     const now = DateTime.now();
@@ -46,42 +49,54 @@ export default function Home() {
           noValidate
         >
           <div className="flex w-full mb-14 gap-8">
-            <div>
+            <div className="form-control">
               <label
                 htmlFor="day"
-                className="text-grey block text-sm font-bold mb-2"
+                className={`block text-sm font-bold mb-2 ${
+                  errors.day?.message ? "text-red" : "text-grey"
+                }`}
               >
                 DAY
               </label>
               <input
-                className="border font-bold rounded border-line w-full px-6 py-2"
-                type="number"
+                className={`border font-bold rounded w-full px-6 py-2 ${
+                  errors.day?.message
+                    ? "border-red active:border-red"
+                    : "border-line"
+                }`}
+                type="text"
                 id="day"
-                {...register(
-                  "day",
-                  {
-                    required: true,
+                placeholder="DD"
+                {...register("day", {
+                  required: true,
+                  pattern: {
+                    value: /^0[1-9]|[12][0-9]|3[01]/,
+                    message: "Invalid day format",
                   },
-                  {
-                    pattern: {
-                      value: /^0[1-9]|[12][0-9]|3[01]/,
-                      message: "Invalid day format",
-                    },
-                  }
-                )}
+                })}
               />
+              <p className="error text-red text-center">
+                {errors.day?.message}
+              </p>
             </div>
             <div>
               <label
                 htmlFor="month"
-                className="text-grey block text-sm font-bold mb-2"
+                className={`block text-sm font-bold mb-2 ${
+                  errors.month?.message ? "text-red" : "text-grey"
+                }`}
               >
                 MONTH
               </label>
               <input
-                className="border font-bold rounded border-line w-full px-6 py-2"
+                className={`border font-bold rounded w-full px-6 py-2 ${
+                  errors.month?.message
+                    ? "border-red active:border-red"
+                    : "border-line"
+                }`}
                 type="number"
                 id="month"
+                placeholder="MM"
                 {...register("month", {
                   required: true,
                   maxLength: 2,
@@ -91,31 +106,39 @@ export default function Home() {
                   },
                 })}
               />
+              <p className="error text-red text-center">
+                {errors.month?.message}
+              </p>
             </div>
             <div>
               <label
                 htmlFor="year"
-                className="text-grey block text-sm font-bold mb-2"
+                className={`block text-sm font-bold mb-2 ${
+                  errors.year?.message ? "text-red" : "text-grey"
+                }`}
               >
                 YEAR
               </label>
               <input
-                className="border font-bold rounded border-line w-full px-6 py-2"
+                className={`border font-bold rounded w-full px-6 py-2 ${
+                  errors.year?.message
+                    ? "border-red active:border-red"
+                    : "border-line"
+                }`}
                 type="number"
                 id="year"
-                {...register(
-                  "year",
-                  {
-                    required: true,
+                placeholder="YYYY"
+                {...register("year", {
+                  required: true,
+                  pattern: {
+                    value: /^(19|20)\d{2}/,
+                    message: "Invalid year format",
                   },
-                  {
-                    pattern: {
-                      value: /^(19|20)\d{2}/,
-                      message: "Invalid year format",
-                    },
-                  }
-                )}
+                })}
               />
+              <p className="error text-red text-center">
+                {errors.year?.message}
+              </p>
             </div>
           </div>
           <div className="relative w-full">
