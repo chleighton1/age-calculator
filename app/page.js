@@ -17,13 +17,15 @@ export default function Home() {
   const { register, control, handleSubmit } = form;
 
   function onSubmit(data) {
-    console.log("Form submitted", data);
     const now = DateTime.now();
     const userBirth = DateTime.local(
       Number(data.year),
       Number(data.month),
       Number(data.day)
     );
+    if (userBirth.c == null) {
+      return alert("Not a valid date");
+    }
 
     const diff = now.diff(userBirth, ["months", "days", "years"]).toObject();
     setAge(() => ({
@@ -31,7 +33,7 @@ export default function Home() {
       months: Math.floor(diff.months),
       days: Math.floor(diff.days),
     }));
-    console.log(age);
+    // console.log(age);
   }
 
   return (
@@ -55,9 +57,18 @@ export default function Home() {
                 className="border font-bold rounded border-line w-full px-6 py-2"
                 type="number"
                 id="day"
-                {...register("day", {
-                  required: "Day is required",
-                })}
+                {...register(
+                  "day",
+                  {
+                    required: true,
+                  },
+                  {
+                    pattern: {
+                      value: /^0[1-9]|[12][0-9]|3[01]/,
+                      message: "Invalid day format",
+                    },
+                  }
+                )}
               />
             </div>
             <div>
@@ -72,7 +83,12 @@ export default function Home() {
                 type="number"
                 id="month"
                 {...register("month", {
-                  required: "Month is required",
+                  required: true,
+                  maxLength: 2,
+                  pattern: {
+                    value: /^0[1-9]|1[1,2]/,
+                    message: "Invalid month format",
+                  },
                 })}
               />
             </div>
@@ -87,9 +103,18 @@ export default function Home() {
                 className="border font-bold rounded border-line w-full px-6 py-2"
                 type="number"
                 id="year"
-                {...register("year", {
-                  required: "Year is required",
-                })}
+                {...register(
+                  "year",
+                  {
+                    required: true,
+                  },
+                  {
+                    pattern: {
+                      value: /^(19|20)\d{2}/,
+                      message: "Invalid year format",
+                    },
+                  }
+                )}
               />
             </div>
           </div>
