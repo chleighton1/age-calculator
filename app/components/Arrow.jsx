@@ -1,12 +1,26 @@
-import React from "react";
+"use client";
+
+import { React, useEffect, useState } from "react";
 
 export default function Arrow() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < 1024);
+    }
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
-    <div className="flex justify-center items-center w-14 h-14 bg-purple rounded-full">
+    <div className="flex justify-center items-center w-16 h-16 lg:w-20 lg:h-20 bg-purple active:bg-black rounded-full">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="25"
-        height="25"
+        width={isMobile ? "25" : "35"}
+        height={isMobile ? "25" : "35"}
         viewBox="0 0 46 44"
       >
         <g fill="none" stroke="#FFF" strokeWidth="3">
