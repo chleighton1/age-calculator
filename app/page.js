@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import Arrow from "./components/Arrow";
 const { DateTime } = require("luxon");
+import CountUp from "react-countup";
 
 export default function Home() {
   const [age, setAge] = useState({
@@ -42,6 +43,7 @@ export default function Home() {
         <form
           className="form mb-16 lg:mb-12 mt-5"
           onSubmit={handleSubmit(onSubmit)}
+          autocomplete="off"
           noValidate
         >
           <div className="flex w-full lg:w-3/4 mb-14 lg:mb-12 form-control gap-6">
@@ -66,7 +68,7 @@ export default function Home() {
                 {...register("day", {
                   required: {
                     value: true,
-                    message: "Required",
+                    message: "This field is required",
                   },
                   pattern: {
                     value: /^0[1-9]|[12][0-9]|3[01]/,
@@ -82,7 +84,7 @@ export default function Home() {
                   },
                 })}
               />
-              <p className="error text-red text-sm tracking-tight mt-1 text-center">
+              <p className="error text-red text-xs mt-1 ml-1 italic">
                 {errors.day?.message}
               </p>
             </div>
@@ -101,13 +103,13 @@ export default function Home() {
                     ? "border-red active:border-red"
                     : "border-line"
                 }`}
-                type="number"
+                type="text"
                 id="month"
                 placeholder="MM"
                 {...register("month", {
                   required: {
                     value: true,
-                    message: "Required",
+                    message: "This field is required",
                   },
                   maxLength: 2,
                   pattern: {
@@ -116,7 +118,7 @@ export default function Home() {
                   },
                 })}
               />
-              <p className="error text-red text-xs tracking-tight mt-1 text-center">
+              <p className="error text-red text-xs mt-1 ml-1 italic">
                 {errors.month?.message}
               </p>
             </div>
@@ -135,13 +137,13 @@ export default function Home() {
                     ? "border-red active:border-red"
                     : "border-line"
                 }`}
-                type="number"
+                type="text"
                 id="year"
                 placeholder="YYYY"
                 {...register("year", {
                   required: {
                     value: true,
-                    message: "Required",
+                    message: "This field is required",
                   },
                   max: {
                     value: DateTime.now().year,
@@ -153,7 +155,7 @@ export default function Home() {
                   },
                 })}
               />
-              <p className="error text-red text-sm tracking-tight mt-1 text-center">
+              <p className="error text-red text-xs mt-1 ml-1 italic">
                 {errors.year?.message}
               </p>
             </div>
@@ -172,19 +174,19 @@ export default function Home() {
       <div className="mb-14">
         <h1 className="text-[50px] sm:text-6xl lg:text-8xl lg:font-extrabold italic font-bold mb-2">
           <span className="text-purple font-extrabold text-[50px] sm:text-6xl lg:text-8xl italic">
-            {age.years ? age.years : "--"}
+            {age.years ? <CountUp end={age.years} /> : "--"}
           </span>{" "}
           years
         </h1>
         <h1 className="text-[50px] sm:text-6xl lg:text-8xl lg:font-extrabold italic font-bold mb-2">
           <span className="text-purple font-extrabold text-[50px] sm:text-6xl lg:text-8xl italic">
-            {age.months ? age.months : "--"}
+            {age.months ? <CountUp end={age.months} /> : "--"}
           </span>{" "}
           months
         </h1>
         <h1 className="text-[50px] sm:text-6xl lg:text-8xl lg:font-extrabold italic font-bold">
           <span className="text-purple font-extrabold text-[50px] sm:text-6xl lg:text-8xl italic">
-            {age.days ? age.days : "--"}
+            {age.days ? <CountUp end={age.days} /> : "--"}
           </span>{" "}
           days
         </h1>
